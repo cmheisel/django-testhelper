@@ -1,5 +1,6 @@
-from testhelper.testcase import DjangoTestCase
+import datetime
 
+from testhelper.testcase import DjangoTestCase
 from testhelper.testingapp import models
 
 class TestHelperTests(DjangoTestCase):
@@ -69,7 +70,7 @@ class TestHelperTests(DjangoTestCase):
         post_save_defaults = { 'category': c }
         a = self.create_object(models.Article)
         self.assertEqual(a.category, c)
-    
+
     def test_create_valid_object(self):
         """
         If a user has provided sufficient Testing.defaults and
@@ -77,14 +78,39 @@ class TestHelperTests(DjangoTestCase):
         create_valid_object will return an instance of the object
         that has been saved into the database.
         """
-        c = self.create_valid_object(models.Category)
-        self.assert_(c.id)
-        
         t = self.create_valid_object(models.Tag)
-        self.assert_(c.id)
+        self.assert_(t.id)
 
     def test_object_creation_with_overrides(self):
         """
         You should be able to pass overrides
         """
-        pass
+        overrides = {
+            'name': 'I, Roommate',
+            'boolean': True,
+        }
+        a = self.create_object(models.Article, overrides)
+        self.assertEqual(a.name, overrides['name'])
+        self.assertEqual(a.boolean, overrides['boolean'])
+
+    def test_object_creation_expansion(self):
+        """
+        Values passed in as overrides and set as Testing.defaults should
+        expand out special values for a random integer (as a string), a 
+        random integer, and the current date time.
+        """
+        overrides = {
+            'name': 'Space Pilot #{ran}',
+            'integer': '#{ran_i}',
+            'created_at': '#{now}',
+        }
+        a = self.create_object(models.Article, overrides)
+        self.assertTrue("{ran}" not in a.name)
+        self.assertEqual(type(a.integer), type(5))
+        self.assertEqual(type(a.created_at), type(datetime.datetime.now()))
+        
+        models.Article.Testing.defaults = overrides
+        a = self.create_valid_object(models.Article)
+        self.assertTrue("{ran}" not in a.name)
+        self.assertEqual(type(a.integer), type(5))
+        self.assertEqual(type(a.created_at), type(datetime.datetime.now()))

@@ -1,10 +1,10 @@
 from django.db import models
 
 class Category(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, blank=False)
 
 class Tag(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, blank=False)
 
     class Testing:
         defaults = {}
@@ -38,4 +38,8 @@ class Article(models.Model):
     archive = models.OneToOneField(Archive, related_name="article", null=True)
 
     class Testing:
-        pass
+        defaults = {
+            'boolean': True,
+            'name': "The Series Has Landed",
+            'image': '/path/to/an/file.jpg',
+        }
