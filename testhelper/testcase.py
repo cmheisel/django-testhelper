@@ -6,6 +6,7 @@ from django.test.client import Client
 from django.db.models.query import QuerySet
 from django.contrib.auth.models import User
 from django.core.handlers.wsgi import WSGIRequest
+from django.db import models
 
 TIMESTAMPING_CHECKED = False
 
@@ -83,27 +84,10 @@ class DjangoTestCase(TestCase):
         for key, value in initial_values.items():
             initial_values[key] = self.__expand_default_value(value)
 
-        return klass(**initial_values)
+        o = klass(**initial_values)
 
-    def __expand_default_value(self, value):
-        "Inserts random numbers, ints, or instantiates classes."
-        obj_index = self.obj_index
-        if hasattr(value, "startswith") and "#{ran}" in value:
-            value = value.replace("#{ran}", str(obj_index))
-        elif hasattr(value, "startswith") and "#{ran_i}" in value:
-            value = int(value.replace("#{ran_i}", str(obj_index)))
-        elif hasattr(value, "startswith") and "#{now}" in value:
-            value = datetime.datetime.now()
-        elif not hasattr(value, "id") and hasattr(value, "Testing"):
-            value = self.create_valid_object(value)
-        return value
-
-    def create_valid_object(self, klass):
-        o = self.create_object(klass)
-        o.save()
-        
         try:
-            post_save_defaults = klass.Testing._post_save_defaults.copy()
+            post_save_defaults = klass.Testing.post_save_defaults.copy()
             for key, value in post_save_defaults.items():
                 value = self.__expand_default_value(value)
                 try:
@@ -114,6 +98,29 @@ class DjangoTestCase(TestCase):
         except AttributeError:
             pass #Doesn't have any post_save defaults
 
+        return o
+
+    def __expand_default_value(self, value):
+        "Inserts random numbers, ints, or instantiates classes."
+        obj_index = self.obj_index
+        if hasattr(value, "startswith") and "#{ran}" in value:
+            value = value.replace("#{ran}", str(obj_index))
+        elif hasattr(value, "startswith") and "#{ran_i}" in value:
+            value = int(value.replace("#{ran_i}", str(obj_index)))
+        elif hasattr(value, "startswith") and "#{now}" in value:
+            value = datetime.datetime.now()
+        try:
+            #Maybe you passed in a class
+            value = self.create_object(value)
+        except TypeError:
+            pass
+            
+        return value
+
+    def create_valid_object(self, klass):
+        o = self.create_object(klass)
+        o.save()
+        
         self.assert_(o.id, "We should have a valid saved object")
         return o
 
