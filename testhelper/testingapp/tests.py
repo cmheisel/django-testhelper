@@ -33,7 +33,12 @@ class TestHelperTests(DjangoTestCase):
         post_save_defaults = { 'category': models.Category }
         models.Article.Testing.defaults = defaults
         models.Article.Testing.post_save_defaults = post_save_defaults
-        
+
         a = self.create_object(models.Article)
         self.assert_(a.category)
-        
+
+        c = self.create_object(models.Category)
+
+        post_save_defaults = { 'category': c }
+        a = self.create_object(models.Article)
+        self.assertEqual(a.category, c)
