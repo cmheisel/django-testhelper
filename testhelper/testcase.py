@@ -71,14 +71,14 @@ class DjangoTestCase(TestCase):
         testhelper.testcase.TIMESTAMPING_CHECKED = True
         return True
 
-    def create_object(self, klass, overwrites = dict()):
+    def create_object(self, klass, overrides = dict()):
         if hasattr(klass, 'Testing') and hasattr(klass.Testing, 'defaults'):
             initial_values = klass.Testing.defaults.copy()
         else:
             initial_values = {}
 
-        if len(overwrites.keys()) > 0:
-            initial_values.update(overwrites)
+        if overrides:
+            initial_values.update(overrides)
 
         self.obj_index = self.create_object_index()
         for key, value in initial_values.items():
