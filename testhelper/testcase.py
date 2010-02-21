@@ -199,7 +199,7 @@ class DjangoTestCase(TestCase):
     def run(self, result=None):
         if result is None: result = self.defaultTestResult()
         try:
-            super(DjangoTestHelper, self).run(result)
+            super(DjangoTestCase, self).run(result)
         except KeyboardInterrupt: # pragma: no cover
             result.stop()
 

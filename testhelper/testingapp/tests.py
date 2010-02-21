@@ -1,5 +1,5 @@
-import unittest
+from testhelper.testcase import DjangoTestCase
 
-class TestHelperTests(unittest.TestCase):
+class TestHelperTests(DjangoTestCase):
     def test_truth(self):
         self.assert_(True)
