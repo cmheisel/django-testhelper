@@ -71,7 +71,10 @@ class DjangoTestCase(TestCase):
         return True
 
     def create_object(self, klass, overwrites = dict()):
-        initial_values = klass.Testing._defaults.copy()
+        if hasattr(klass, 'Testing') and hasattr(klass.Testing, 'defaults'):
+            initial_values = klass.Testing.defaults.copy()
+        else:
+            initial_values = {}
 
         if len(overwrites.keys()) > 0:
             initial_values.update(overwrites)
