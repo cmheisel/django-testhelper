@@ -58,7 +58,11 @@ class TestHelperTests(DjangoTestCase):
         Default relations should be able to be specified
         """
         defaults = { 'name': 'Space Pilot 3000' }
-        post_save_defaults = { 'category': models.Category }
+        post_save_defaults = {
+            'category': models.Category,
+            'tags': models.Tag,
+            'archive': models.Archive,
+        }        
         models.Article.Testing.defaults = defaults
         models.Article.Testing.post_save_defaults = post_save_defaults
 
@@ -68,6 +72,7 @@ class TestHelperTests(DjangoTestCase):
         c = self.create_object(models.Category)
 
         post_save_defaults = { 'category': c }
+        models.Article.Testing.post_save_defaults = post_save_defaults
         a = self.create_object(models.Article)
         self.assertEqual(a.category, c)
 

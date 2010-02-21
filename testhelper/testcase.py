@@ -88,6 +88,7 @@ class DjangoTestCase(TestCase):
 
         try:
             post_save_defaults = klass.Testing.post_save_defaults.copy()
+            o.save()
             for key, value in post_save_defaults.items():
                 value = self.__expand_default_value(value)
                 try:
@@ -111,7 +112,7 @@ class DjangoTestCase(TestCase):
             value = datetime.datetime.now()
         try:
             #Maybe you passed in a class
-            value = self.create_object(value)
+            value = self.create_valid_object(value)
         except TypeError:
             pass
             
