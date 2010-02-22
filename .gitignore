@@ -4,3 +4,7 @@ bin
 include
 .Python
 *.pyc
+.coverage
+man
+pip-log.txt
+src
