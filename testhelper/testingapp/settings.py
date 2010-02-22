@@ -16,6 +16,8 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sites',
     'django.contrib.sessions',
+    'django_nose',
     'testhelper.testingapp',
 )
 
+TEST_RUNNER = 'django_nose.run_tests'
