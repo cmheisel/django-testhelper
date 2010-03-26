@@ -32,45 +32,6 @@ class DjangoTestCase(TestCase):
         self.admin_user.save()
         self.assertValidObject(self.admin_user)
 
-    def check_timestamping(self, klass, run_only_once=True):
-        if run_only_once and testhelper.testcase.TIMESTAMPING_CHECKED:
-            #We don't need to check every single time, once is enough if you're using testhelper.testcase.update_timestamps
-            return True
-            
-        r = self.create_object(klass)
-
-        now = datetime.datetime.now()
-        r.save()
-
-        for key in ["year", "month", "day", "hour", "minute", "second"]:
-            now_value = getattr(now, key)
-            created_at_value = getattr(r.created_at, key)
-            updated_at_value = getattr(r.updated_at, key)
-
-            self.assert_(now_value == created_at_value, """The object's created_at %s (%s) != the now value (%s)""" % (key, created_at_value, now_value) )
-            self.assert_(now_value == updated_at_value, """The object's updated_at %s (%s) != the now value (%s)""" % (key, updated_at_value, now_value) )
-
-        import time
-        time.sleep(1.2)
-
-        old_now = now
-        now = datetime.datetime.now()
-        
-        r.save()
-        for key in ["year", "month", "day", "hour", "minute", "second"]:
-            now_value = getattr(now, key)
-            old_now_value = getattr(old_now, key)
-            created_at_value = getattr(r.created_at, key)
-            updated_at_value = getattr(r.updated_at, key)
-
-            self.assert_(old_now_value == created_at_value, "The object's created_at %s (%s) != the now value (%s)" % (key, created_at_value, now_value))
-            self.assert_(now_value == updated_at_value, "The object's updated_at %s (%s) != the now value (%s)" % (key, updated_at_value, now_value))
-
-        self.assertNotEqual(r.updated_at.second, r.created_at.second)
-
-        testhelper.testcase.TIMESTAMPING_CHECKED = True
-        return True
-
     def create_object(self, klass, overrides = dict()):
         if hasattr(klass, 'Testing') and hasattr(klass.Testing, 'defaults'):
             initial_values = klass.Testing.defaults.copy()
@@ -196,22 +157,3 @@ class DjangoTestCase(TestCase):
         delta = expected - actual
         msg = "Expected datetime: %s is not within 5 seconds of the actual datetime: %s" % (expected, actual)
         self.assert_(delta.seconds <= 5, msg)
-
-    def login_without_redirect(self, client, path, username, password, **extra):
-        """
-        A specialized sequence of GET and POST to log into a view that
-        is protected by a @login_required access decorator.
-
-        path should be the URL of the page that is login protected.
-
-        Returns the response from GETting the requested URL after
-        login is complete. Returns False if login process failed.
-        """
-
-        raise DeprecationWarning("This method doesn't appear to do anything.")
-        form_data = {
-            'username': username,
-            'password': password,
-            'this_is_the_login_form': '1',
-        }
-        response = client.post(path, data=form_data, **extra)
