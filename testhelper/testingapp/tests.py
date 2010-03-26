@@ -206,3 +206,11 @@ class TestHelperTests(DjangoTestCase):
         
         with self.assertRaises(AssertionError):
             self.assertContentType(r, 'text/xml')
+    
+    def test_assertValidJson(self):
+        r = self.client.get('/json/valid/')
+        self.assertValidJson(r)
+        
+        r = self.client.get('/json/invalid/')
+        with self.assertRaises(AssertionError):
+            self.assertValidJson(r)

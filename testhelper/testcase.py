@@ -2,6 +2,11 @@ from urlparse import urlparse
 import random, datetime, pprint
 import unittest2
 
+try:
+    import json
+except ImportError:
+    import simplejson
+
 from django.test import TestCase
 from django.test.client import Client
 from django.db.models.query import QuerySet
@@ -120,9 +125,8 @@ class DjangoTestCase(TestCase, unittest2.TestCase):
         self.assertIn(content_type, response["Content-Type"])
 
     def assertValidJson(self, content_string):
-        import simplejson
-        json_feed = simplejson.loads(content_string)
-        if not json_feed: # pragma: no cover
+        json_feed = json.loads(content_string)
+        if not json_feed:
             raise self.failureException, "This isn't valid JSON:\n%s" % (content_string)
 
     def assertCloseDatetimes(self, expected, actual, seconds=5):
