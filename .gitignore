@@ -8,3 +8,5 @@ include
 man
 pip-log.txt
 src
+coverage.xml
+nosetests.xml
