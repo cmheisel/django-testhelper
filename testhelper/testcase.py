@@ -186,44 +186,6 @@ class DjangoTestCase(TestCase):
     def assertContentType(self, response, content_type):
         self.assert_(response["Content-Type"].startswith(content_type), "%s does not start with %s" % (response["Content-Type"], content_type))
 
-    def check_object_list_view(self, app_url, expected_object_list, object_list_name, template_name, content_type):
-        """Abstracted test function that checks app_url to make sure it uses template_name, returns content_type and has victim_list in the right order."""
-        response = self.client.get(app_url)
-        template = self.get_template(response, 0)
-
-        self.assertValidResponse(response)
-
-        actual = response.context[object_list_name]
-        self.assertEqual(len(expected_object_list), actual.count())
-        [ self.assertEqual(expected_object_list[i], actual[i]) for i in xrange(0,len(expected_object_list)) ]
-
-        self.assertEqual(template.name, template_name)
-        self.assertContentType(response, content_type)
-
-    def check_draft_and_published_manager(self, klass):
-        self.assertEqual(0, klass.draft_objects.count())
-
-        o = self.create_object(klass, dict(status="Draft"))
-        o.save()
-        self.assertValidObject(o)
-        self.assert_(o.status == "Draft")
-
-        o2 = self.create_object(klass, dict(status="Published"))
-        o2.save()
-        self.assertValidObject(o2)
-        self.assert_(o2.status == "Published")
-
-        self.assertEqual(2, klass.objects.all().count())
-        self.assertEqual(1, klass.draft_objects.count())
-        self.assertEqual(1, klass.published_objects.count())
-
-    def run(self, result=None):
-        if result is None: result = self.defaultTestResult()
-        try:
-            super(DjangoTestCase, self).run(result)
-        except KeyboardInterrupt: # pragma: no cover
-            result.stop()
-
     def assertValidJson(self, content_string):
         import simplejson
         json_feed = simplejson.loads(content_string)
