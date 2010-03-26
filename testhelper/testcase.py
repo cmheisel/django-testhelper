@@ -145,9 +145,6 @@ class DjangoTestCase(TestCase):
     def create_random_integer(self, max_value=99999):
         return random.randint(1, max_value)
 
-    def cleanup_models(self, model_list):
-        for model in model_list: model.objects.all().delete()
-
     def get_template(self, response, index=0):
         try:
             return response.template[index]
