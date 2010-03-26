@@ -171,3 +171,12 @@ class TestHelperTests(DjangoTestCase):
         assertRaises = self.assertRaises
         with assertRaises(AssertionError):
             self.assert404(r)
+    
+    def test_close_datetimes(self):
+        """
+            Should pass for datetimes that almost equal, but fail on ones
+            that aren't.
+        """
+        d1 = datetime.datetime.now()
+        d2 = d1 + datetime.timedelta(seconds=2)
+        self.assertCloseDatetimes(d1, d2)

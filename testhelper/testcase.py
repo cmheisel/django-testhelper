@@ -125,7 +125,7 @@ class DjangoTestCase(TestCase, unittest2.TestCase):
         if not json_feed: # pragma: no cover
             raise self.failureException, "This isn't valid JSON:\n%s" % (content_string)
 
-    def assertCloseDateTimes(self, expected, actual):
-        delta = expected - actual
-        msg = "Expected datetime: %s is not within 5 seconds of the actual datetime: %s" % (expected, actual)
-        self.assert_(delta.seconds <= 5, msg)
+    def assertCloseDatetimes(self, expected, actual, seconds=5):
+        delta = abs(expected - actual)
+        msg = "Expected datetime: %s is not within %s seconds of the actual datetime: %s" % (expected, seconds, actual)
+        self.assert_(delta.seconds <= seconds, msg)
