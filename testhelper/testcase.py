@@ -1,28 +1,14 @@
 from urlparse import urlparse
-import unittest, random, datetime, pprint
+import random, datetime, pprint
+import unittest2
 
 from django.test import TestCase
 from django.test.client import Client
 from django.db.models.query import QuerySet
 from django.contrib.auth.models import User
-from django.core.handlers.wsgi import WSGIRequest
 from django.db import models
 
-TIMESTAMPING_CHECKED = False
-
-def run_if_mysql(orig_function):
-    '''Runs the test only if MySQL is the database engine in settings.DATABASE_ENGINE'''
-    def _test_always_passes(*args, **kwargs):
-        #print "Not running the test %s because database engine isn't MySQL" % (orig_function.__name__)
-        assert(True)
-    
-    from django.conf import settings
-    if settings.DATABASE_ENGINE != "mysql":
-        return _test_always_passes
-    else: # pragma: no cover
-        return orig_function
-
-class DjangoTestCase(TestCase):
+class DjangoTestCase(TestCase, unittest2.TestCase):
     object_indexes = []
 
     def setUp(self):
@@ -119,20 +105,6 @@ class DjangoTestCase(TestCase):
             return response.template[index]
         except TypeError:
             return response.template
-
-    def assertStringContains(self, test_string, content_string, msg = None, assert_not_contains = False):
-        if not msg:
-            msg = """'%s' not in '%s'""" % (test_string, content_string)
-            if assert_not_contains:
-                msg = """'%s' in '%s'""" % (test_string, content_string)
-
-        if assert_not_contains:
-            self.assert_(test_string not in content_string, msg)
-        else:
-            self.assert_(test_string in content_string, msg)
-
-    def assertNotStringContains(self, test_string, content_string, msg = None):
-        self.assertStringContains(test_string, content_string, msg, assert_not_contains = True)
 
     def assert404(self, response):
         self.assertEqual(response.status_code, 404, "We should have a 404 response: %s != %s" % (response.status_code, 404))

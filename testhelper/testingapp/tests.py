@@ -4,7 +4,7 @@ from testhelper.testcase import DjangoTestCase
 from testhelper.testingapp import models
 
 class TestHelperTests(DjangoTestCase):
-    def setUp(self):
+    def setUp (self):
         self.test_models = [
             models.Category,
             models.Article,
@@ -149,3 +149,11 @@ class TestHelperTests(DjangoTestCase):
         
         r = self.client.get('/single-template/')
         self.assertEqual('testingapp/single-template.html', self.get_template(r).name)
+    
+    def test_unittest2_inheritance(self):
+        """
+            The methods and behavior of unittest2.TestCase should be a part of 
+            any sublcass of testhelper.testcase.DjangoTestCase
+        """
+        self.assertIn("foo", "food")
+        self.assertNotIn("bar", "foo")
