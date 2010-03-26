@@ -105,6 +105,11 @@ class TestHelperTests(DjangoTestCase):
             'integer': '#{ran_i}',
         }
         results = []
+        
+        #seed the object_indexes tracker
+        for i in xrange(0,100):
+            self.create_random_unique_integer()
+        
         for i in xrange(0,3):
             a = self.create_object(models.Article, overrides)
             results.append(a.integer)
