@@ -105,7 +105,7 @@ class TestHelperTests(DjangoTestCase):
             'integer': '#{ran_i}',
         }
         results = []
-        for i in xrange(0,1000):
+        for i in xrange(0,3):
             a = self.create_object(models.Article, overrides)
             results.append(a.integer)
         self.assertEqual(len(results), len(set(results)), "All randomly created integers should be unique")
