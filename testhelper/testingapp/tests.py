@@ -1,3 +1,4 @@
+from __future__ import with_statement
 import datetime
 
 from testhelper.testcase import DjangoTestCase
@@ -157,3 +158,16 @@ class TestHelperTests(DjangoTestCase):
         """
         self.assertIn("foo", "food")
         self.assertNotIn("bar", "foo")
+    
+    def test_assert404(self):
+        """
+            assert404 should pass on 404ing URLs and fail on non-404s.
+        """
+        r = self.client.get('/does-not-exist/')
+        self.assert404(r)
+        
+        r = self.client.get('/single-template/')
+        
+        assertRaises = self.assertRaises
+        with assertRaises(AssertionError):
+            self.assert404(r)
