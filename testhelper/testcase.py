@@ -117,7 +117,7 @@ class DjangoTestCase(TestCase, unittest2.TestCase):
         self.assert_(instance.id, "Valid objects should be save()-able and have an id.")
 
     def assertContentType(self, response, content_type):
-        self.assert_(response["Content-Type"].startswith(content_type), "%s does not start with %s" % (response["Content-Type"], content_type))
+        self.assertIn(content_type, response["Content-Type"])
 
     def assertValidJson(self, content_string):
         import simplejson

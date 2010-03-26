@@ -186,7 +186,6 @@ class TestHelperTests(DjangoTestCase):
         r = self.client.get('/single-template/')
         self.assert200(r)
 
-    
     def test_close_datetimes(self):
         """
             Should pass for datetimes that almost equal, but fail on ones
@@ -195,3 +194,15 @@ class TestHelperTests(DjangoTestCase):
         d1 = datetime.datetime.now()
         d2 = d1 + datetime.timedelta(seconds=2)
         self.assertCloseDatetimes(d1, d2)
+    
+    def test_assertContentType(self):
+        """
+            Should pass if the content types match
+        """
+        r = self.client.get('/single-template/')
+        print r["Content-Type"]
+        self.assertContentType(r, 'text')
+        self.assertContentType(r, 'text/html')
+        
+        with self.assertRaises(AssertionError):
+            self.assertContentType(r, 'text/xml')
