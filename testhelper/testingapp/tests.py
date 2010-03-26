@@ -168,9 +168,24 @@ class TestHelperTests(DjangoTestCase):
         
         r = self.client.get('/single-template/')
         
-        assertRaises = self.assertRaises
-        with assertRaises(AssertionError):
+        with self.assertRaises(AssertionError):
             self.assert404(r)
+
+    def test_assert200(self):
+        """
+            assert200 should pass on 200ing URLs and fail on non-200s
+        """
+        r = self.client.get('/does-not-exist/')
+        with self.assertRaises(AssertionError):
+            self.assert200(r)
+            
+        r = self.client.get('/single-template') #should redirect
+        with self.assertRaises(AssertionError):
+            self.assert200(r)
+
+        r = self.client.get('/single-template/')
+        self.assert200(r)
+
     
     def test_close_datetimes(self):
         """

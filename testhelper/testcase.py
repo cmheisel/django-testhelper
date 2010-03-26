@@ -109,7 +109,7 @@ class DjangoTestCase(TestCase, unittest2.TestCase):
     def assert404(self, response):
         self.assertEqual(response.status_code, 404, "We should have a 404 response: %s != %s" % (response.status_code, 404))
 
-    def assertValidResponse(self, response):
+    def assert200(self, response):
         self.assertEqual(response.status_code, 200, "We should have a valid response: %s != %s" % (response.status_code, 200))
 
     def assertValidObject(self, instance):
