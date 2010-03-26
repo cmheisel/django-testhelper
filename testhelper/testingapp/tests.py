@@ -141,3 +141,6 @@ class TestHelperTests(DjangoTestCase):
         r = self.client.get('/multi-template/')
         self.assertEqual('testingapp/multi-template.html', self.get_template(r).name)
         self.assertEqual('testingapp/base.html', self.get_template(r, 1).name)
+        
+        r = self.client.get('/single-template/')
+        self.assertEqual('testingapp/single-template.html', self.get_template(r).name)
