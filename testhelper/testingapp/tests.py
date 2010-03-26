@@ -107,7 +107,7 @@ class TestHelperTests(DjangoTestCase):
         results = []
         
         #seed the object_indexes tracker
-        for i in xrange(0,100):
+        for i in xrange(0,1000):
             self.create_random_unique_integer()
         
         for i in xrange(0,3):
