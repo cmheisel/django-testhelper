@@ -12,9 +12,11 @@ class TestHelperTests(DjangoTestCase):
         ]
         self.initial_defaults = {}
         self._store_initial_defaults()
+        super(TestHelperTests, self).setUp()
 
     def tearDown(self):
         self._restore_initial_defaults()
+        super(TestHelperTests, self).tearDown()
 
     def _restore_initial_defaults(self):
         for model in self.test_models:
