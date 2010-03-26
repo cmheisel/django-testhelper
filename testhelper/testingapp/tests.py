@@ -97,6 +97,16 @@ class TestHelperTests(DjangoTestCase):
         a = self.create_object(models.Article, overrides)
         self.assertEqual(a.name, overrides['name'])
         self.assertEqual(a.boolean, overrides['boolean'])
+    
+    def test_unique_object_id_creation(self):
+        overrides = {
+            'integer': '#{ran_i}',
+        }
+        results = []
+        for i in xrange(0,1000):
+            a = self.create_object(models.Article, overrides)
+            results.append(a.integer)
+        self.assertEqual(len(results), len(set(results)), "All randomly created integers should be unique")
 
     def test_object_creation_expansion(self):
         """

@@ -129,6 +129,11 @@ class DjangoTestCase(TestCase):
         return self.create_random_unique_integer()
 
     def create_random_unique_integer(self, max_value=99999):
+        """
+            Returns a random, but unique integer.
+            Uniqeness is per instance of DjangoTestCase, as 'used' integers
+            are stored in an instance's object_indexes array.
+        """
         random_int = self.create_random_integer(max_value)
         while random_int in self.object_indexes:
             #We've got a duplicate here, try again
