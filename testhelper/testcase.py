@@ -146,6 +146,14 @@ class DjangoTestCase(TestCase):
         return random.randint(1, max_value)
 
     def get_template(self, response, index=0):
+        """
+            Returns the first template from the response, or optionally pass 
+            in an index to return the nth template.
+            
+            This is a consistent method for accessing the template name.
+            Useful when a view uses template inheritance as response.template
+            changes from the template file name, to an array of file names.
+        """
         try:
             return response.template[index]
         except TypeError:

@@ -21,3 +21,9 @@ INSTALLED_APPS = (
 )
 
 TEST_RUNNER = 'django_nose.run_tests'
+
+TEMPLATE_LOADERS = (
+    'django.template.loaders.filesystem.load_template_source',
+    'django.template.loaders.app_directories.load_template_source',
+#     'django.template.loaders.eggs.load_template_source',
+)

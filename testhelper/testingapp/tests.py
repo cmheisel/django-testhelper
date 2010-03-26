@@ -131,3 +131,13 @@ class TestHelperTests(DjangoTestCase):
         self.assertTrue("{ran}" not in a.name)
         self.assertEqual(type(a.integer), type(5))
         self.assertEqual(type(a.created_at), type(datetime.datetime.now()))
+        
+    def test_get_template(self):
+        """
+            self.get_template should return the 0th (default) or nth template
+            when an index argument is provided.
+        """
+        
+        r = self.client.get('/multi-template/')
+        self.assertEqual('testingapp/multi-template.html', self.get_template(r).name)
+        self.assertEqual('testingapp/base.html', self.get_template(r, 1).name)
