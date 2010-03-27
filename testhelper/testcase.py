@@ -5,7 +5,7 @@ import unittest2
 try:
     import json
 except ImportError:
-    import simplejson
+    import simplejson as json
 
 from django.test import TestCase
 from django.test.client import Client
@@ -124,8 +124,16 @@ class DjangoTestCase(TestCase, unittest2.TestCase):
     def assertContentType(self, response, content_type):
         self.assertIn(content_type, response["Content-Type"])
 
+    def assertValidJsonResponse(self, response):
+        self.assert200(response)
+        self.assertValidJson(response.content)
+
     def assertValidJson(self, content_string):
-        json_feed = json.loads(content_string)
+        try:
+            json_feed = json.loads(content_string)
+        except json.JSONDecodeError, e:
+            raise self.failureException, unicode(e)
+
         if not json_feed:
             raise self.failureException, "This isn't valid JSON:\n%s" % (content_string)
 

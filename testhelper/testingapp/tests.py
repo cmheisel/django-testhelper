@@ -209,8 +209,18 @@ class TestHelperTests(DjangoTestCase):
     
     def test_assertValidJson(self):
         r = self.client.get('/json/valid/')
-        self.assertValidJson(r)
-        
+        self.assertValidJson(r.content)
+        self.assertValidJsonResponse(r)
+
         r = self.client.get('/json/invalid/')
         with self.assertRaises(AssertionError):
-            self.assertValidJson(r)
+            self.assertValidJson(r.content)
+        with self.assertRaises(AssertionError):
+            self.assertValidJsonResponse(r)
+
+        #Something that's not even JSON should error as well
+        r = self.client.get('/single-template/')
+        with self.assertRaises(AssertionError):
+            self.assertValidJson(r.content)
+        with self.assertRaises(AssertionError):
+            self.assertValidJsonResponse(r)
