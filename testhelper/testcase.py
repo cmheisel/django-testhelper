@@ -129,6 +129,7 @@ class DjangoTestCase(TestCase, unittest2.TestCase):
         self.assertValidJson(response.content)
 
     def assertValidJson(self, content_string):
+        print dir(json)
         try:
             json_feed = json.loads(content_string)
         except json.JSONDecodeError, e:
