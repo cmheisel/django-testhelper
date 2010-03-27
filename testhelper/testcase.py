@@ -135,9 +135,6 @@ class DjangoTestCase(TestCase, unittest2.TestCase):
         except json.JSONDecodeError, e:
             raise self.failureException, unicode(e)
 
-        if not json_feed:
-            raise self.failureException, "This isn't valid JSON:\n%s" % (content_string)
-
     def assertCloseDatetimes(self, expected, actual, seconds=5):
         delta = abs(expected - actual)
         msg = "Expected datetime: %s is not within %s seconds of the actual datetime: %s" % (expected, seconds, actual)
